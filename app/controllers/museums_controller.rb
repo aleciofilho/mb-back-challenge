@@ -5,6 +5,7 @@ class MuseumsController < ApplicationController
       render json: MapboxService.new.build_museums_response(coordinates[:lat], coordinates[:lng])
     else
       render json: coordinates.to_json
+      # render json: { status: coordinates[:status], errors: coordinates[:errors] }.to_json
     end
   end
 
