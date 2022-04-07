@@ -1,10 +1,12 @@
 class MuseumsController < ApplicationController
-  lat = params[:lat]
-  lng = params[:lng]
-  coordinates = validate_params(params[:lat], params[:lng])
-  if coordinates[:valid]
+  def museums_by_postcode
+    coordinates = validate_params(params[:lat], params[:lng])
+    if coordinates[:valid]
+      render json: MapboxService.new.museums(coordinates[:lat], coordinates[:lng])
+    else
+      render json: coordinates.to_json
+    end
   end
-  MapboxService.new.museums(coordinates[:lat], coordinates[:lng])
 
   private
 
@@ -28,5 +30,4 @@ class MuseumsController < ApplicationController
     end
     { valid: false, errors: errors, status: status }
   end
-
 end
