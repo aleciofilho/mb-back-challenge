@@ -2,9 +2,10 @@ class MuseumsController < ApplicationController
   def museums_by_postcode
     coordinates = validate_params(params[:lat], params[:lng])
     if coordinates[:valid]
-      render json: MapboxService.new.build_museums_response(coordinates[:lat], coordinates[:lng])
+      museums = MapboxService.new.build_museums_response(coordinates[:lat], coordinates[:lng])
+      render json: museums, status: coordinates[:status]
     else
-      render json: coordinates.to_json
+      render json: { errors: coordinates[:errors] }, status: coordinates[:status]
       # render json: { status: coordinates[:status], errors: coordinates[:errors] }.to_json
     end
   end
@@ -25,7 +26,7 @@ class MuseumsController < ApplicationController
       status = :bad_request
       errors << 'Please provide lat and lng'
     else
-      status = :unprocessed_entity
+      status = :unprocessable_entity
       errors << 'lat must be between -90 and 90' unless valid_lat
       errors << 'lng must be between -180 and 180' unless valid_lng
     end

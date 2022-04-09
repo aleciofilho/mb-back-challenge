@@ -10,7 +10,7 @@ class MuseumsControllerTest < ActionDispatch::IntegrationTest
 
   test 'should return an error when provided invalid lat and/or lng' do
     get '/museums?lat=100&lng=13'
-    assert_response :unprocessed_entity
+    assert_response :unprocessable_entity
     parsed_response = JSON.parse(response.body)
     assert parsed_response['errors'].include?('lat must be between -90 and 90')
   end
